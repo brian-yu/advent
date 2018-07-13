@@ -8,7 +8,7 @@ open Stdio
 
 let dims line = List.map (
     String.split line 'x'
-  ) ~f: (fun x -> int_of_string x)
+  ) ~f: (fun x -> Int.of_string x)
 ;;
 let sides x = match x with
   | l::w::h::[] -> [l*w; w*h; h*l]
