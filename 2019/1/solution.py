@@ -15,5 +15,5 @@ lines = [line.rstrip('\n') for line in open('input.txt').readlines()]
 masses = [int(line) for line in lines]
 
 
-print(sum([get_fuel(mass) for mass in masses]))
-print(sum([recursive_get_fuel(mass) for mass in masses]))
+print(sum(map(get_fuel, masses)))
+print(sum(map(recursive_get_fuel, masses)))
