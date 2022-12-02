@@ -1,5 +1,5 @@
-use std::{fs, collections::HashMap};
 use crate::Solution;
+use std::{collections::HashMap, fs};
 
 pub struct Day {
     pub input_path: String,
@@ -13,14 +13,18 @@ struct Space {
 
 impl Space {
     fn new(min: u32, max: u32) -> Space {
-        Space { cache: HashMap::new(), min, max }
+        Space {
+            cache: HashMap::new(),
+            min,
+            max,
+        }
     }
 
     fn distance(&mut self, a: u32, b: u32) -> u32 {
         let absolute_diff = a.abs_diff(b);
 
         if let Some(scaled_diff) = self.cache.get(&absolute_diff) {
-            return scaled_diff.clone();
+            return *scaled_diff;
         }
 
         let mut scaled_diff = 0;
@@ -38,7 +42,7 @@ impl Space {
         scaled_diff
     }
 
-    fn validate(&mut self, positions: &Vec<u32>, pos: u32) -> () {
+    fn _validate(&mut self, positions: &Vec<u32>, pos: u32) {
         println!("========== Validating move to {}", pos);
         let mut cost = 0;
         for ship_pos in positions {
@@ -52,11 +56,15 @@ impl Space {
 }
 
 impl Solution for Day {
-    fn part_1(&self) -> () {
+    fn part_1(&self) {
         let input = fs::read_to_string(&self.input_path).unwrap();
         // let input = fs::read_to_string(&self.input_path.replace("input", "test")).unwrap();
 
-        let mut positions: Vec<i32> = input.trim().split(",").map(|i| i.parse().unwrap()).collect();
+        let mut positions: Vec<i32> = input
+            .trim()
+            .split(',')
+            .map(|i| i.parse().unwrap())
+            .collect();
 
         positions.sort();
 
@@ -70,20 +78,23 @@ impl Solution for Day {
         let mut cost = 0;
         for position in positions {
             cost += median.abs_diff(position);
-
         }
 
         println!("{}", cost);
     }
 
-    fn part_2(&self) -> () {
+    fn part_2(&self) {
         let input = fs::read_to_string(&self.input_path).unwrap();
         // let input = fs::read_to_string(&self.input_path.replace("input", "test")).unwrap();
 
-        let positions: Vec<u32> = input.trim().split(",").map(|i| i.parse().unwrap()).collect();
+        let positions: Vec<u32> = input
+            .trim()
+            .split(',')
+            .map(|i| i.parse().unwrap())
+            .collect();
 
-        let min_pos = positions.iter().min().unwrap().clone();
-        let max_pos = positions.iter().max().unwrap().clone();
+        let min_pos = *positions.iter().min().unwrap();
+        let max_pos = *positions.iter().max().unwrap();
 
         let mut space = Space::new(min_pos, max_pos);
 
@@ -96,8 +107,7 @@ impl Solution for Day {
             }
             best_cost = best_cost.min(cost);
         }
-    
+
         println!("{}", best_cost);
     }
 }
-

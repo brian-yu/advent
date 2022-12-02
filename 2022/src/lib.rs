@@ -1,4 +1,5 @@
 #![feature(linked_list_cursors)]
+#![feature(binary_heap_into_iter_sorted)]
 use std::env;
 
 mod day1;
