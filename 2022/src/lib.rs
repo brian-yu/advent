@@ -9,6 +9,8 @@ mod day3;
 mod day4;
 mod day5;
 mod day6;
+mod day7;
+mod day8;
 
 pub trait Solution {
     fn part_1(&self) {}
@@ -53,6 +55,14 @@ pub fn run() {
         .run(),
         6 => day6::code::Day {
             input_path: "src/day6/input.txt".to_string(),
+        }
+        .run(),
+        7 => day7::code::Day {
+            input_path: "src/day7/input.txt".to_string(),
+        }
+        .run(),
+        8 => day8::code::Day {
+            input_path: "src/day8/input.txt".to_string(),
         }
         .run(),
         _ => panic!("No solution exists for specified day."),
