@@ -1,9 +1,13 @@
 #![feature(linked_list_cursors)]
 #![feature(binary_heap_into_iter_sorted)]
 #![feature(iter_array_chunks)]
+#![feature(array_chunks)]
 use std::env;
 
 mod day1;
+mod day10;
+mod day11;
+mod day12;
 mod day2;
 mod day3;
 mod day4;
@@ -68,6 +72,18 @@ pub fn run() {
         .run(),
         9 => day9::code::Day {
             input_path: "src/day9/input.txt".to_string(),
+        }
+        .run(),
+        10 => day10::code::Day {
+            input_path: "src/day10/input.txt".to_string(),
+        }
+        .run(),
+        11 => day11::code::Day {
+            input_path: "src/day11/input.txt".to_string(),
+        }
+        .run(),
+        12 => day12::code::Day {
+            input_path: "src/day12/input.txt".to_string(),
         }
         .run(),
         _ => panic!("No solution exists for specified day."),
