@@ -1,20 +1,20 @@
-use num_bigint::BigUint;
-
 use crate::Solution;
-use std::{
-    collections::VecDeque,
-    fs,
-    ops::{AddAssign, DivAssign, MulAssign},
-};
+use std::{collections::VecDeque, fs};
 
 pub struct Day {
     pub input_path: String,
 }
 
+#[derive(Clone)]
+struct Worry {
+    num: usize,
+    dividing_factor: usize,
+}
+
 struct Monkey {
-    items: VecDeque<BigUint>,
-    op: Box<dyn Fn(BigUint) -> BigUint>,
-    test: Box<dyn Fn(&BigUint) -> usize>,
+    items: VecDeque<usize>,
+    op: Box<dyn Fn(usize) -> usize>,
+    test: Box<dyn Fn(usize) -> usize>,
 }
 
 impl Monkey {
@@ -26,28 +26,22 @@ impl Monkey {
         let divisor: usize = lines[3].split_whitespace().last().unwrap().parse().unwrap();
         let if_true: usize = lines[4].split_whitespace().last().unwrap().parse().unwrap();
         let if_false: usize = lines[5].split_whitespace().last().unwrap().parse().unwrap();
-        let test: Box<dyn Fn(&BigUint) -> usize> = Box::new(move |x| {
-            if x % BigUint::from(divisor) == BigUint::from(0_u8) {
-                if_true
-            } else {
-                if_false
-            }
-        });
+        let test = Box::new(move |x| if x % divisor == 0 { if_true } else { if_false });
 
         let items = items_str.split(", ").map(|i| i.parse().unwrap()).collect();
 
         let op_tokens: Vec<_> = op_str.split_whitespace().collect();
-        let op: Box<dyn Fn(BigUint) -> BigUint> = match op_tokens[1] {
+        let op: Box<dyn Fn(usize) -> usize> = match op_tokens[1] {
             "*" => match op_tokens[2] {
-                "old" => Box::new(|x| &x * &x),
+                "old" => Box::new(|x| x * x),
                 arg => {
-                    let op_arg = arg.parse::<BigUint>().unwrap();
-                    Box::new(move |x| &x * &op_arg)
+                    let op_arg = arg.parse::<usize>().unwrap();
+                    Box::new(move |x| x * op_arg)
                 }
             },
             "+" => {
-                let op_arg = op_tokens[2].parse::<BigUint>().unwrap();
-                Box::new(move |x| &x + &op_arg)
+                let op_arg = op_tokens[2].parse::<usize>().unwrap();
+                Box::new(move |x| x + op_arg)
             }
             _ => panic!("Invalid operation: {op_str}"),
         };
@@ -67,15 +61,13 @@ impl Solution for Day {
         for _round in 0..20 {
             for idx in 0..monkeys.len() {
                 let throws = {
-                    let mut throws: Vec<(usize, BigUint)> = vec![];
+                    let mut throws: Vec<(usize, usize)> = vec![];
                     let monkey = &mut monkeys[idx];
                     while let Some(item) = monkey.items.pop_front() {
                         inspections[idx] += 1;
 
-                        let worry = (monkey.op)(item) / (3_u8);
-
-                        // let worry = (monkey.op)(item)
-                        let new_monkey = (monkey.test)(&worry);
+                        let worry = (monkey.op)(item) / 3;
+                        let new_monkey = (monkey.test)(worry);
                         throws.push((new_monkey, worry));
                     }
                     throws
@@ -98,21 +90,16 @@ impl Solution for Day {
         let mut monkeys: Vec<Monkey> = input.trim().split("\n\n").map(Monkey::from).collect();
         let mut inspections: Vec<u32> = monkeys.iter().map(|_| 0).collect();
 
-        for round in 0..10_000 {
-            if round % 100 == 0 {
-                println!("Round {}", round);
-            }
+        for _round in 0..10_000 {
             for idx in 0..monkeys.len() {
                 let throws = {
-                    let mut throws: Vec<(usize, BigUint)> = vec![];
+                    let mut throws: Vec<(usize, usize)> = vec![];
                     let monkey = &mut monkeys[idx];
                     while let Some(item) = monkey.items.pop_front() {
                         inspections[idx] += 1;
 
                         let worry = (monkey.op)(item);
-
-                        // let new_monkey = (monkey.test)(&worry);
-                        let new_monkey = (monkey.test)(&worry);
+                        let new_monkey = (monkey.test)(worry);
                         throws.push((new_monkey, worry));
                     }
                     throws
