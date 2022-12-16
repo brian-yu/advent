@@ -72,23 +72,18 @@ impl Datum {
 
 impl Ord for Datum {
     fn cmp(&self, right: &Datum) -> Ordering {
-        // println!("cmp {} vs {}", self, right);
         match (self, right) {
             (Datum::Integer(l), Datum::Integer(r)) => l.cmp(r),
             (Datum::List(l), Datum::List(r)) => {
                 let mut l_iter = l.iter();
                 let mut r_iter = r.iter();
                 loop {
-                    let (left_item, right_item) = (l_iter.next(), r_iter.next());
-                    match (left_item, right_item) {
-                        (Some(ld), Some(lr)) => {
-                            // println!("Looking at {} and {}", ld, lr);
-                            match ld.cmp(lr) {
-                                Ordering::Less => return Ordering::Less,
-                                Ordering::Greater => return Ordering::Greater,
-                                _ => (),
-                            }
-                        }
+                    match (l_iter.next(), r_iter.next()) {
+                        (Some(ld), Some(lr)) => match ld.cmp(lr) {
+                            Ordering::Less => return Ordering::Less,
+                            Ordering::Greater => return Ordering::Greater,
+                            Ordering::Equal => (),
+                        },
                         (None, Some(_)) => return Ordering::Less,
                         (Some(_), None) => return Ordering::Greater,
                         (None, None) => return Ordering::Equal,
