@@ -8,3 +8,5 @@ edition = "2021"
 [dependencies]
 num-bigint = "0.4.3"
 regex = "1.7.0"
+gmp-mpfr-sys = { version = "1.4.1", features=["use-system-libs"] }
+rug = "1.18.0"

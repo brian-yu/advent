@@ -8,6 +8,10 @@ mod day1;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
+mod day14;
+mod day15;
+mod day16;
 mod day2;
 mod day3;
 mod day4;
@@ -84,6 +88,22 @@ pub fn run() {
         .run(),
         12 => day12::code::Day {
             input_path: "src/day12/input.txt".to_string(),
+        }
+        .run(),
+        13 => day13::code::Day {
+            input_path: "src/day13/input.txt".to_string(),
+        }
+        .run(),
+        14 => day14::code::Day {
+            input_path: "src/day14/input.txt".to_string(),
+        }
+        .run(),
+        15 => day15::code::Day {
+            input_path: "src/day15/input.txt".to_string(),
+        }
+        .run(),
+        16 => day16::code::Day {
+            input_path: "src/day16/input.txt".to_string(),
         }
         .run(),
         _ => panic!("No solution exists for specified day."),
